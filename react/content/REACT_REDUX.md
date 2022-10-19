@@ -410,7 +410,55 @@ Provider 模块的功能并不复杂，主要分为以下两点：
 - 接收 Redux 的 store 作为 props，通过 context 对象传递给子孙组件上的 connect
 
 下面看下具体代码：
-![](https://github.com/pacofeng/frontend-interview/tree/master/react/img/948198-20160912025216289-1301725702.png)
+
+```js
+export default class Provider extends Component {
+  getChildContext() {
+    return { store: this.store };
+  }
+
+  constructor(props, context) {
+    super(props, context);
+    this.store = props.store;
+  }
+
+  render() {
+    return Children.only(this.props.children);
+  }
+}
+
+if (process.env.NODE_NEW !== 'production') {
+  Provider.prototype.componentWillReceiveProps = function (nextProps) {
+    const { store } = this;
+    const { store: nextStore } = nextProps;
+
+    if (store !== nextStore) {
+      warnAboutReceivingStore();
+    }
+  };
+}
+
+Provider.propTypes = {
+  store: storeShape.isRequired,
+  children: PropTypes.element.isRequired,
+};
+
+Provider.childrenContextTypes = {
+  store: storeShape.isRequired,
+};
+```
+
+### 封装原应用
+
+[31-34] render 方法中，渲染了其子级元素，使整个应用成为 Provider 的子组件。
+1、this.props.children 是 react 内置在 this.props 上的对象，用于获取当前组件的所有子组件
+2、Children 为 react 内部定义的顶级对象，该对象上封装了一些方便操作子组件的方法。Children.only 用于获取仅有的一个子组件，没有或超过一个均会报错。故需要注意：确保 Provider 组件的直接子级为单个封闭元素，切勿多个组件平行放置。
+
+### 传递 store
+
+[26-29] Provider 初始化时，获取到 props 中的 store 对象；
+[22-24] 将外部的 store 对象放入 context 对象中，使子孙组件上的 connect 可以直接访问到 context 对象中的 store。
+1、context 可以使子孙组件直接获取父级组件中的数据或方法，而无需一层一层通过 props 向下传递。context 对象相当于一个独立的空间，父组件通过 getChildContext()向该空间内写值；定义了 contextTypes 验证的子孙组件可以通过 this.context.xxx，从 context 对象中读取 xxx 字段的值。
 
 # Reference:
 
