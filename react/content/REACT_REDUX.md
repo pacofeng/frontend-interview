@@ -409,7 +409,7 @@ Provider 模块的功能并不复杂，主要分为以下两点：
 - 在原应用组件上包裹一层，使原来整个应用成为 Provider 的子组件
 - 接收 Redux 的 store 作为 props，通过 context 对象传递给子孙组件上的 connect
 
-下面看下具体代码：
+下面看下具体代码：(https://github.com/pacofeng/frontend-interview/tree/master/react/img/948198-20160912025216289-1301725702.png)
 
 # Reference:
 
