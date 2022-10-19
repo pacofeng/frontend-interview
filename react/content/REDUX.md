@@ -310,34 +310,22 @@ add6(10); // 16
 下面我们通过一个非常巧妙的方法来写一个函数的合成（compose）。
 
 ```js
+// export function compose(...funcs) {
+//   if (funcs.length === 0) {
+//     return (arg) => arg;
+//   }
+
+//   if (funcs.length === 1) {
+//     return funcs[0];
+//   }
+//   return funcs.reduce(
+//     (a, b) =>
+//       (...args) =>
+//         a(b(...args))
+//   );
+// }
+
 export function compose(...funcs) {
-  if (funcs.length === 0) {
-    return (arg) => arg;
-  }
-
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-  return funcs.reduce(
-    (a, b) =>
-      (...args) =>
-        a(b(...args))
-  );
-  //   return funcs.reduce((a, b) => {
-  //     return (...args) => {
-  //       console.log(args);
-
-  //       return a(b(...args));
-  //     };
-  //   });
-  function compose(...funcs) {
-    return (val) => {
-      return funcs.reduceRight((prev, fn) => fn(prev), val);
-    };
-  }
-}
-
-export function compose2(...funcs) {
   return (val) => {
     return funcs.reduceRight((prev, fn) => fn(prev), val);
   };
@@ -407,7 +395,7 @@ function middleware2(store) {
 
 好了，答案揭晓：1, 2, (原始 dispatch), 2, 1。
 
-为什么会这样呢？因为 middleware2 接收的 dispatch 是最原始的，而 middleware1 接收的 dispatch 是经过 middleware1 改造后的，我把它们写成如下的样子，大家应该就清楚了。
+为什么会这样呢？因为 middleware2 接收的 dispatch 是最原始的，而 middleware1 接收的 dispatch 是经过 middleware2 改造后的，我把它们写成如下的样子，大家应该就清楚了。
 
 ```js
 console.log(1);
