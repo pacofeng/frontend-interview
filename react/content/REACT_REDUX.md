@@ -13,6 +13,7 @@
   - [八、React-Router 路由库](#八-react-router-路由库)
 - [React-Redux 原理分析](#react-redux-原理分析)
   - [Provider](#provider)
+  - [connect](#connect)
 - [Reference:](#reference)
 
 <!-- /code_chunk_output -->
