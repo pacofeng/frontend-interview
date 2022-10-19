@@ -607,15 +607,16 @@ const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
 
 - withRef
 
-withRef 用来给包装在里面的组件一个 ref，可以通过 getWrappedInstance 方法来获取这个 ref，默认为 false。
+withRef 用来给包装在里面的组件一个 ref，可以通过 `getWrappedInstance` 方法来获取这个 ref，默认为 false。
 
 ### React 如何响应 store 变化
 
 文章一开始我们也提到 React 其实跟 Redux 没有直接联系，也就是说，Redux 中 dispatch 触发 store tree 中 state 变化，并不会导致 React 重新渲染。
 react-redux 才是真正触发 React 重新渲染的模块，那么这一过程是怎样实现的呢？
 刚刚提到，connect 模块返回一个 wrapWithConnect 函数，wrapWithConnect 函数中又返回了一个 Connect 组件。Connect 组件的功能有以下两点：
-1、包装原组件，将 state 和 action 通过 props 的方式传入到原组件内部
-2、监听 store tree 变化，使其包装的原组件可以响应 state 变化
+
+1. 包装原组件，将 state 和 action 通过 props 的方式传入到原组件内部
+2. 监听 store tree 变化，使其包装的原组件可以响应 state 变化
 
 - 如何注册监听
 
