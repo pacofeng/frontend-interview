@@ -399,7 +399,6 @@ react-redux 是一个轻量级的封装库，核心方法只有两个：
 
 - Provider
 - connect
-  下面我们来逐个分析其作用
 
 ## Provider
 
@@ -591,11 +590,11 @@ mergeProps 是一个函数，定义了 mapState,mapDispatch 及 this.props 的�
 
 `options`是一个对象，包含`pure`和`withRef`两个属性
 
-#### pure
+- pure
 
 表示是否开启 pure 优化，默认值为 true
 
-#### withRef
+- withRef
 
 withRef 用来给包装在里面的组件一个 ref，可以通过 getWrappedInstance 方法来获取这个 ref，默认为 false。
 
@@ -607,19 +606,19 @@ react-redux 才是真正触发 React 重新渲染的模块，那么这一过程�
 1、包装原组件，将 state 和 action 通过 props 的方式传入到原组件内部
 2、监听 store tree 变化，使其包装的原组件可以响应 state 变化
 
-#### 如何注册监听
+- 如何注册监听
 
 Redux 中，可以通过 `store.subscribe(listener)`注册一个监听器。listener 会在 store tree 更新后执行。
 
-#### 何时注册
+- 何时注册
 
 当 Connect 组件加载到页面后，当前组件开始监听 store tree 变化。
 
-#### 何时注销
+- 何时注销
 
 当当前 Connect 组件销毁后，我们希望其中注册的 listener 也一并销毁，避免性能问题。此时可以在 Connect 的 `componentWillUnmount` 周期函数中执行这一过程。
 
-#### 变更处理逻辑
+- 变更处理逻辑
 
 有了触发组件更新的时机，我们下面主要看下，组件是通过何种方式触发重新渲染
 Connect 组件在初始化时，就已经在 `this.state` 中缓存了 store tree 中 state 的状态。这两行分别取出当前 state 状态和变更前 state 状态进行比较
