@@ -3,7 +3,7 @@
 <!-- code_chunk_output -->
 
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png 'Logo Title Text 1')
-![alt text](https://github.com/pacofeng/frontend-interview/tree/master/react/img/948198-20160912025216289-1301725702.png 'Logo Title Text 2')
+![alt text](../img/948198-20160912025216289-1301725702.png 'Logo Title Text 2')
 
 - [React-Redux 基础用法](#react-redux-基础用法)
   - [一、UI 组件](#一-ui-组件)
