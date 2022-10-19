@@ -336,6 +336,12 @@ export function compose(...funcs) {
     };
   }
 }
+
+export function compose2(...funcs) {
+  return (val) => {
+    return funcs.reduceRight((prev, fn) => fn(prev), val);
+  };
+}
 ```
 
 上述代码巧妙的地方在于：通过数组的 `reduce` 方法，将两个方法合成一个方法，然后用这个合成的方法再去和下一个方法合成，直到结束，这样我们就得到了一个所有方法的合成函数。
