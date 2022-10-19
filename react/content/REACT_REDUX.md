@@ -411,7 +411,7 @@ Provider 模块的功能并不复杂，主要分为以下两点：
 
 下面看下具体代码：
 
-```js
+```js class:"lineNo"
 export default class Provider extends Component {
   getChildContext() {
     return { store: this.store };
