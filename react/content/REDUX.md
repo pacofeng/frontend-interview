@@ -330,6 +330,11 @@ export function compose(...funcs) {
   //       return a(b(...args));
   //     };
   //   });
+  function compose(...funcs) {
+    return (val) => {
+      return funcs.reduceRight((prev, fn) => fn(prev), val);
+    };
+  }
 }
 ```
 
