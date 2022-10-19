@@ -411,7 +411,7 @@ Provider 模块的功能并不复杂，主要分为以下两点：
 
 下面看下具体代码：
 
-```js class:"lineNo"
+```js
 export default class Provider extends Component {
   getChildContext() {
     return { store: this.store };
@@ -451,14 +451,176 @@ Provider.childrenContextTypes = {
 ### 封装原应用
 
 [31-34] render 方法中，渲染了其子级元素，使整个应用成为 Provider 的子组件。
-1、this.props.children 是 react 内置在 this.props 上的对象，用于获取当前组件的所有子组件
-2、Children 为 react 内部定义的顶级对象，该对象上封装了一些方便操作子组件的方法。Children.only 用于获取仅有的一个子组件，没有或超过一个均会报错。故需要注意：确保 Provider 组件的直接子级为单个封闭元素，切勿多个组件平行放置。
+1、`this.props.children` 是 react 内置在 `this.props` 上的对象，用于获取当前组件的所有子组件
+2、`Children` 为 react 内部定义的顶级对象，该对象上封装了一些方便操作子组件的方法。`Children.only` 用于获取仅有的一个子组件，没有或超过一个均会报错。故需要注意：确保 `Provider` 组件的直接子级为单个封闭元素，切勿多个组件平行放置。
 
 ### 传递 store
 
 [26-29] Provider 初始化时，获取到 props 中的 store 对象；
 [22-24] 将外部的 store 对象放入 context 对象中，使子孙组件上的 connect 可以直接访问到 context 对象中的 store。
-1、context 可以使子孙组件直接获取父级组件中的数据或方法，而无需一层一层通过 props 向下传递。context 对象相当于一个独立的空间，父组件通过 getChildContext()向该空间内写值；定义了 contextTypes 验证的子孙组件可以通过 this.context.xxx，从 context 对象中读取 xxx 字段的值。
+`1、context` 可以使子孙组件直接获取父级组件中的数据或方法，而无需一层一层通过 props 向下传递。`context` 对象相当于一个独立的空间，父组件通过 `getChildContext()`向该空间内写值；定义了 `contextTypes` 验证的子孙组件可以通过 `this.context.xxx`，从 context 对象中读取 xxx 字段的值。
+
+### 小结
+
+而言之，Provider 模块的功能很简单，从最外部封装了整个应用，并向 connect 模块传递 store。
+而最核心的功能在 connect 模块中。
+
+## connect
+
+正如这个模块的命名，connect 模块才是真正连接了 React 和 Redux。
+现在，我们可以先回想一下 Redux 是怎样运作的：首先需要注册一个全局唯一的 store 对象，用来维护整个应用的 state；当要变更 state 时，我们会 dispatch 一个 action，reducer 根据 action 更新相应的 state。
+下面我们再考虑一下使用 react-redux 时，我们做了什么：
+
+```js
+import React from "react"
+import ReactDOM from "react-dom"
+import { bindActionCreators } from "redux"
+import {connect} from "react-redux"
+
+class xxxComponent extends React.Component{
+    constructor(props){
+        super(props)
+    }
+    componentDidMount(){
+        this.props.aActions.xxx1();
+    }
+    render (
+        <div>
+            {this.props.$$aProps}
+        </div>
+    )
+}
+
+export default connect(
+    state=>{
+        return {
+            $$aProps:state.$$aProps,
+            $$bProps:state.$$bProps,
+            // ...
+        }
+    },
+    dispatch=>{
+        return {
+            aActions:bindActionCreators(AActions,dispatch),
+            bActions:bindActionCreators(BActions,dispatch),
+            // ...
+        }
+    }
+)(xxxComponent)
+```
+
+通过以上代码，我们可以归纳出以下信息：
+
+1、使用了 react-redux 后，我们导出的对象不再是原先定义的 xxxComponent，而是通过 connect 包裹后的新 React.Component 对象。
+connect 执行后返回一个函数（wrapWithConnect），那么其内部势必形成了闭包。而 wrapWithConnect 执行后，必须要返回一个 ReactComponent 对象，才能保证原代码逻辑可以正常运行，而这个 ReactComponent 对象通过 render 原组件，形成对原组件的封装。
+2、渲染页面需要 store tree 中的 state 片段，变更 state 需要 dispatch 一个 action，而这两部分，都是从 this.props 获取。故在我们调用 connect 时，作为参数传入的 state 和 action，便在 connect 内部进行合并，通过 props 的方式传递给包裹后的 ReactComponent。
+connect 完整函数声明如下：
+
+```js
+connect(
+    mapStateToProps(state,ownProps)=>stateProps:Object,
+    mapDispatchToProps(dispatch, ownProps)=>dispatchProps:Object,
+    mergeProps(stateProps, dispatchProps, ownProps)=>props:Object,
+    options:Object
+)=>(
+    component
+)=>component
+```
+
+再来看下 connect 函数体结构，我们摘取核心步骤进行描述
+
+```js
+export default function connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps,
+  options = {}
+) {
+  // 参数处理
+  // ...
+  return function wrapWithConnect(WrappedComponent) {
+    class Connect extends Component {
+      constructor(props, context) {
+        super(props, context);
+        this.store = props.store || context.store;
+        const storeState = this.store.getState();
+        this.state = { storeState };
+      }
+      // 周期方法及操作方法
+      // ...
+      render() {
+        this.renderedElement = createElement(
+          WrappedComponent,
+          this.mergedProps //mearge stateProps, dispatchProps, props
+        );
+        return this.renderedElement;
+      }
+    }
+    return hoistStatics(Connect, WrappedComponent);
+  };
+}
+```
+
+其实已经基本印证了我们的猜测：
+1、connect 通过 context 获取 Provider 中的 store，通过 store.getState()获取整个 store tree 上所有 state。
+2、connect 模块的返回值 wrapWithConnect 为 function。
+3、wrapWithConnect 返回一个 ReactComponent 对象 Connect，Connect 重新 render 外部传入的原组件 WrappedComponent，并把 connect 中传入的 mapStateToProps, mapDispatchToProps 与组件上原有的 props 合并后，通过属性的方式传给 WrappedComponent。
+
+下面我们结合代码进行分析一下每个函数的意义。
+
+### mapStateToProps
+
+`mapStateToProps(state,props)`必须是一个函数。
+参数 state 为 store tree 中所有 state，参数 props 为通过组件 Connect 传入的 props。
+返回值表示需要 merge 进 props 中的 state。
+
+### mapDispatchToProps
+
+`mapDispatchToProps(dispatch, props)`可以是一个函数，也可以是一个对象。
+参数 dispatch 为 `store.dispatch()`函数，参数 props 为通过组件 Connect 传入的 props。
+返回值表示需要 merge 进 props 中的 action。
+
+### mergeProps
+
+mergeProps 是一个函数，定义了 mapState,mapDispatch 及 this.props 的合并规则，默认合并规则如下：
+`{...parentProps, ...stateProps, ...dispatchProps}`
+如果通过 connect 注册了 `mergeProps` 方法，以上代码会使用 `mergeProps` `定义的规则进行合并，mergeProps` 合并后的结果，会通过 props 传入 Connect 组件。
+
+### options
+
+`options`是一个对象，包含`pure`和`withRef`两个属性
+
+pure
+表示是否开启 pure 优化，默认值为 true
+
+withRef
+withRef 用来给包装在里面的组件一个 ref，可以通过 getWrappedInstance 方法来获取这个 ref，默认为 false。
+
+### React 如何响应 store 变化
+
+文章一开始我们也提到 React 其实跟 Redux 没有直接联系，也就是说，Redux 中 dispatch 触发 store tree 中 state 变化，并不会导致 React 重新渲染。
+react-redux 才是真正触发 React 重新渲染的模块，那么这一过程是怎样实现的呢？
+刚刚提到，connect 模块返回一个 wrapWithConnect 函数，wrapWithConnect 函数中又返回了一个 Connect 组件。Connect 组件的功能有以下两点：
+1、包装原组件，将 state 和 action 通过 props 的方式传入到原组件内部
+2、监听 store tree 变化，使其包装的原组件可以响应 state 变化
+
+如何注册监听
+Redux 中，可以通过 store.subscribe(listener)注册一个监听器。listener 会在 store tree 更新后执行。
+
+何时注册
+当 Connect 组件加载到页面后，当前组件开始监听 store tree 变化。
+
+何时注销
+当当前 Connect 组件销毁后，我们希望其中注册的 listener 也一并销毁，避免性能问题。此时可以在 Connect 的 componentWillUnmount 周期函数中执行这一过程。
+
+变更处理逻辑
+有了触发组件更新的时机，我们下面主要看下，组件是通过何种方式触发重新渲染
+Connect 组件在初始化时，就已经在 this.state 中缓存了 store tree 中 state 的状态。这两行分别取出当前 state 状态和变更前 state 状态进行比较
+最终 store tree 中 state 通过 this.setState()更新到 Connect 内部的 state 中，而 this.setState()方法正好可以触发 Connect 及其子组件的重新渲染。
+
+### 小结
+
+可以看到，react-redux 的核心功能都在 connect 模块中，理解好这个模块，有助于我们更好的使用 react-redux 处理业务问题，优化代码性能。
 
 # Reference:
 
