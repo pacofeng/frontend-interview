@@ -515,6 +515,7 @@ export default connect(
 connect 执行后返回一个函数（wrapWithConnect），那么其内部势必形成了闭包。而 wrapWithConnect 执行后，必须要返回一个 ReactComponent 对象，才能保证原代码逻辑可以正常运行，而这个 ReactComponent 对象通过 render 原组件，形成对原组件的封装。
 
 2、渲染页面需要 store tree 中的 state 片段，变更 state 需要 dispatch 一个 action，而这两部分，都是从 this.props 获取。故在我们调用 connect 时，作为参数传入的 state 和 action，便在 connect 内部进行合并，通过 props 的方式传递给包裹后的 ReactComponent。
+
 connect 完整函数声明如下：
 
 ```js
