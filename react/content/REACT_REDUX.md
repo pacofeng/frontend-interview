@@ -564,9 +564,10 @@ export default function connect(
 ```
 
 其实已经基本印证了我们的猜测：
-1、connect 通过 context 获取 Provider 中的 store，通过 store.getState()获取整个 store tree 上所有 state。
-2、connect 模块的返回值 wrapWithConnect 为 function。
-3、wrapWithConnect 返回一个 ReactComponent 对象 Connect，Connect 重新 render 外部传入的原组件 WrappedComponent，并把 connect 中传入的 mapStateToProps, mapDispatchToProps 与组件上原有的 props 合并后，通过属性的方式传给 WrappedComponent。
+
+- connect 通过 context 获取 Provider 中的 store，通过 store.getState()获取整个 store tree 上所有 state。
+- connect 模块的返回值 wrapWithConnect 为 function。
+- wrapWithConnect 返回一个 ReactComponent 对象 Connect，Connect 重新 render 外部传入的原组件 WrappedComponent，并把 connect 中传入的 mapStateToProps, mapDispatchToProps 与组件上原有的 props 合并后，通过属性的方式传给 WrappedComponent。
 
 下面我们结合代码进行分析一下每个函数的意义。
 
@@ -584,9 +585,17 @@ export default function connect(
 
 ### mergeProps
 
-mergeProps 是一个函数，定义了 mapState,mapDispatch 及 this.props 的合并规则，默认合并规则如下：
-`{...parentProps, ...stateProps, ...dispatchProps}`
-如果通过 connect 注册了 `mergeProps` 方法，以上代码会使用 `mergeProps` `定义的规则进行合并，mergeProps` 合并后的结果，会通过 props 传入 Connect 组件。
+mergeProps 是一个函数，定义了 mapState, mapDispatch 及 this.props 的合并规则，默认合并规则如下：
+
+```js
+const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
+  ...parentProps,
+  ...stateProps,
+  ...dispatchProps,
+});
+```
+
+如果通过 connect 注册了 `mergeProps` 方法，以上代码会使用 `mergeProps` 定义的规则进行合并，`mergeProps` 合并后的结果，会通过 props 传入 Connect 组件。
 
 ### options
 
