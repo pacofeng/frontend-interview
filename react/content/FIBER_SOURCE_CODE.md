@@ -692,8 +692,6 @@ export const ShouldCapture = /*         */ 0b10000000000;
 
 2. `commitAllHostEffects`
 
-3. `commitAllLifeCycles`
-
 提交所有更新并渲染，源码如下：
 
 ```js
