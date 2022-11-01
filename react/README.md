@@ -7,3 +7,4 @@
 5. [React 深入之 Fiber 原理](https://github.com/pacofeng/frontend-interview/tree/master/react/content/FIBER.md)
 6. [React 深入之 Fiber 源码解析](https://github.com/pacofeng/frontend-interview/tree/master/react/content/FIBER_SOURCE_CODE.md)
 7. [React 深入之 HOC, RenderProps 类组件复用](https://github.com/pacofeng/frontend-interview/tree/master/react/content/HOC.md)
+8. [React 深入之 ReactHooks](https://github.com/pacofeng/frontend-interview/tree/master/react/content/HOOKS.md)
