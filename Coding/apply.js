@@ -1,8 +1,4 @@
-// 1. foo.fn = bar;
-// 2. foo.fn();
-// 3. delete foo.fn;
-
-Function.prototype.call2 = function (context, ...args) {
+Function.prototype.apply2 = function (context, args) {
   const currentContext = context || window;
   currentContext.fn = this;
 
@@ -13,13 +9,11 @@ Function.prototype.call2 = function (context, ...args) {
   return res;
 };
 
-var value = 3;
 const foo = {
   value: 2,
 };
 
 function bar(name, age) {
-  console.log(this.value);
   return {
     value: this.value,
     name: name,
@@ -27,4 +21,4 @@ function bar(name, age) {
   };
 }
 
-console.log(bar.call2(null, 'paco', 4)); // {value: 3, name: 'paco', age: 4}
+console.log(bar.apply2(foo, ['paco', 4])); // {value: 2, name: 'paco', age: 4}
