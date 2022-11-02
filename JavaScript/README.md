@@ -21,7 +21,7 @@
 
 10. [JavaScript 深入之 new 的模拟实现](https://github.com/pacofeng/frontend-interview/tree/master/JavaScript/content/NEW.md)
 
-11. [JavaScript 深入之类数组对象与 arguments](https://github.com/pacofeng/frontend-interview/tree/master/JavaScript/content/ARRAY.md)
+11. [JavaScript 深入之类数组对象与 arguments](https://github.com/pacofeng/frontend-interview/tree/master/JavaScript/content/ARRAY_LIKE.md)
 
 ## 专题系列
 
