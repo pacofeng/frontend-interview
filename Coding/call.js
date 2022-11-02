@@ -13,7 +13,7 @@ Function.prototype.call2 = function (context, ...args) {
   return res;
 };
 
-const value = 3;
+var value = 3;
 const foo = {
   value: 2,
 };
@@ -27,4 +27,4 @@ function bar(name, age) {
   };
 }
 
-console.log(bar.call2(foo, 'paco', 4));
+console.log(bar.call2(null, 'paco', 4)); // {value: 3, name: 'paco', age: 4}
