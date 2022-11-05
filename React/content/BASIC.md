@@ -917,6 +917,7 @@ render() {
 - 函数式定义无状态组件:创建纯展示组件，这种组件只负责根据传入的 props 来展示,不涉及到 state 状态的操作,组件不会被实例化，整体渲染性能得到提升，不能访问 this 对象，不能访问生命周期的方法
 - ES5 原生方式 React.createClass 定义组件:React.createClass 会自绑定函数方法，导致不必要的性能开销。
 - ES6 形式的 extends React.Component 定义组件:目前极为推荐的创建有状态组件的方式，最终会取代 React.createClass 形式；相对于 React.createClass 可以更好实现代码复用。
+
   (1)React.createClass
 
 ```js
