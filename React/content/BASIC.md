@@ -95,7 +95,7 @@ React 是一个简单的 javascript UI 库，用于构建高效、快速的用�
     - `getDerivedStateFromProps(props, state)`
     - `shouldComponentUpdate(nextProps, nextState)`
     - `render`
-    - `getSnapshotBeforeUpdate(prevProps, prevState)`:参数表示更新之前的 props 和 state，最近一次渲染输出（提交到 DOM 节点）之前调用，它使得组件能在发生更改之前从 DOM 中捕获一些信息（例如，滚动位置）。此生命周期方法的任何返回值将作为参数传递给 componentDidUpdate()。在最终确定的 render 执行之前执行，也就是能保证其获取到的元素状态与 didUpdate 中获取到的元素状态相同。
+    - `getSnapshotBeforeUpdate(prevProps, prevState)`:参数表示更新之前的 props 和 state，最近一次 render 完，更新 DOM 之前调用，它使得组件能在发生更改之前从 DOM 中捕获一些信息（例如，滚动位置）。此生命周期方法的任何返回值将作为参数传递给 componentDidUpdate()。
     - `componentDidUpdate()`
 
 getDerivedStateFromProps 代码讲解：
