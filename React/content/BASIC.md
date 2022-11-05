@@ -214,6 +214,7 @@ class ScrollingList extends React.Component {
 ## react 中发起网络请求应该在哪个生命周期中进行？为什么？
 
 - 对于异步请求，最好放在 componentDidMount 中；同步的状态改变，可以放在 componentWillMount 中，一般用的比较少
+- Your components that loads Ajax needs to be able to handle empty data. You might for example show a spinner or some encouraging text when the Ajax loads.
 
 ## state 和 props 触发更新的生命周期分别？
 
@@ -224,11 +225,11 @@ class ScrollingList extends React.Component {
 
 ## 虚拟 dom、更新原理
 
-- 为什么需要虚拟 dom
+- 为什么需要虚拟 dom? -
   我们知道在前端性能优化中，有一个很重要的一项就是尽可能少的操作 DOM，不仅仅是 DOM 操作相对较慢，更是因为频繁的 DOM 操作会造成浏览器的回流或者重绘，这些都会对我们的性能造成影响。
-- 虚拟 dom 是什么
+- 虚拟 dom 是什么? -
   虚拟 dom 是页面中真实的 dom 元素的 js 表示形式，每当 DOM 发生更改时，浏览器都需要重新计算 CSS、进行布局并重新绘制 web 页面，使用 VirtualDOM 有效地重建 DOM。
-- 虚拟 dom 更新原理
+- 虚拟 dom 更新原理? -
   每当有更新发生时，Reconciler（协调器）会做如下工作： 1.调用函数组件、或 class 组件的 render 方法，将返回的 JSX 转化为虚拟 DOM（整个 DOM 副本保存为虚拟 DOM） 2.将虚拟 DOM 和上次更新时的虚拟 DOM 对比 3.通过对比找出本次更新中变化的虚拟 DOM
   4。通知 Renderer（渲染器）将变化的虚拟 DOM 渲染到页面上
 
