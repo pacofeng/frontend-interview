@@ -790,13 +790,13 @@ class NameFrom extends React.Component {
   }
   render() {
     return(){
-      <form onSubmit="{this.handleSubmit}">
+      <form onSubmit={this.handleSubmit}>
         <label>
           名字：
           <input
             type="text"
-            value="{this.state.value}"
-            onChange="{this.handleChange}"
+            value={this.state.value}
+            onChange={this.handleChange}
           />
         </label>
       </form>
@@ -820,10 +820,10 @@ class NameFrom extends React.Component {
     event.preventDefault();
   }
   render(){ return(){
-    <form onSubmit="{this.handleSubmit}">
+    <form onSubmit={this.handleSubmit}>
       <label>
         名字：
-        <input type="text" ref="{this.input}" />
+        <input type="text" ref={this.input} />
       </label>
     </form>
     }
