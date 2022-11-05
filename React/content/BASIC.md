@@ -99,7 +99,7 @@ React 是一个简单的 javascript UI 库，用于构建高效、快速的用�
     - `componentDidUpdate()`
 
 getDerivedStateFromProps 代码讲解：
-getDerivedStateFromProps 接收到新的 props 或者调用了 setState 和 forceUpdate 时被调用。如当接收到新的属性想修改 state ，就可以使用。
+getDerivedStateFromProps 挂载时，或者接收到新的 props 或者调用了 setState 和 forceUpdate 时被调用。如当接收到新的属性想修改 state ，就可以使用。
 
 ```js
 // 当 props.counter 变化时，赋值给 state
@@ -173,8 +173,11 @@ class App extends React.Component {
 }
 ```
 
-getDerivedStateFromProps 代码讲解：
-最终确定的 render 执行之前执行，也就是能保证其获取到的元素状态与 didUpdate 中获取到的元素状态相同
+getSnapshotBeforeUpdate 代码讲解：
+
+- 触发时间: update 发生的时候，在 render 之后，在组件 dom 渲染之前。
+- 返回一个值，作为 componentDidUpdate 的第三个参数，如果你不想要返回值，请返回 null，不写的话控制台会有警告
+- 配合 componentDidUpdate, 可以覆盖 componentWillUpdate 的所有用法
 
 ```js
 class ScrollingList extends React.Component {
