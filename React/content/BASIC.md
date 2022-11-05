@@ -1029,9 +1029,13 @@ class Contact extends React.Component {
 ## react 路由的实现原理
 
 - 基于 hash 的路由：通过监听 hashchange 事件，感知 hash 的变化
+
   (1):改变 hash 可以直接通过 location.hash=xxx
+
 - 基于 H5 history 路由：
+
   (1):改变 url 可以通过 history.pushState 和 resplaceState 等，会将 URL 压入堆栈，同时能够应用 history.go() 等 API
+
   (2):监听 url 的变化可以通过自定义事件触发实现
 
 ## 如何配置 React-Router 实现路由切换
