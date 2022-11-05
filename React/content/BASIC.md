@@ -918,7 +918,7 @@ render() {
 - ES5 原生方式 React.createClass 定义组件:React.createClass 会自绑定函数方法，导致不必要的性能开销。
 - ES6 形式的 extends React.Component 定义组件:目前极为推荐的创建有状态组件的方式，最终会取代 React.createClass 形式；相对于 React.createClass 可以更好实现代码复用。
 
-  (1)React.createClass
+(1)React.createClass
 
 ```js
 import React from 'react';
