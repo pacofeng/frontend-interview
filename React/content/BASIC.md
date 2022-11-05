@@ -773,7 +773,7 @@ State --> View --> New State --> New View
 - 事件处理器通过事件对象 e 拿到改变后的状态，并更新组件的 state
 - 一旦通过 setState 方法更新 state，就会触发视图的重新渲染，完成表单组件的更新
 
-```html
+```jsx
 class NameFrom extends React.Component { constroctor(props){ super(props);
 this.state = { value: '' } this.handleChange = this.handleChange.bind(this);
 this.handleSubmit = this.handleSubmit.bind(this); handleChange(e) {
@@ -796,7 +796,7 @@ return(){
 - 非受控组件
   官方定义：表单数据的处理都由 DOM 节点处理，要编写一个非受控组件，而不是为每个状态更新都编写数据处理函数，你可以 使用 ref 来从 DOM 节点中获取表单数据。
 
-```html
+```jsx
 class NameFrom extends React.Component { constroctor(props){ super(props);
 this.input = React.createRef(); this.handleSubmit =
 this.handleSubmit.bind(this); handleSubmit(event) { alert('A name was submitted:
