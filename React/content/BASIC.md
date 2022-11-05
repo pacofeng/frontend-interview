@@ -613,8 +613,8 @@ React 需要利用调用顺序来正确更新相应的状态，以及调用相�
 ## useEffect 与 useLayoutEffect 的区别
 
 同：useEffect 与 useLayoutEffect 两者都是用于处理副作用；使用方式也完全相同
-不同：useEffect 在 React 渲染过程中是被异步调用的，用于绝大多数场景
-useLayoutEffect 会在所有的 DOM 变更之后同步调用，需要避免在 useLayoutEffect 做计算量较大的耗时任务从而造成阻塞。
+
+不同：useEffect 在 React 渲染过程中是被异步调用的，用于绝大多数场景; useLayoutEffect 会在所有的 DOM 变更之后同步调用，需要避免在 useLayoutEffect 做计算量较大的耗时任务从而造成阻塞。
 
 ## fiber 架构的理解
 
