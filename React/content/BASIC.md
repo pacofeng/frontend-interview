@@ -669,8 +669,14 @@ https://juejin.cn/post/6844903502729183239
 ```
 
 - React 中，如果需要绑定事件，我们常常在 jsx 中绑定，并不是将 click 事件绑定到了 div 的真实 DOM 上，所有的事件会被附加到 root(react 17) 或者 document(react 16)上，当 DOM 事件触发时，会向上冒泡到 root(react 17) 或者 document(react 16)，也就是附加事件处理器的地方，事件会得到响应。
-- 优点：不需要担心跨浏览器的兼容问题；对事件的处理，通过事件委托机制冒泡到 root(react 17) 或者 document(react 16) 节点进行触发，减少内存消耗，避免频繁解绑，提高性能；方便事件的同一管理（如事务机制）
-- 合成事件和原生事件的区别：事件命名方式不同。react 事件采用小驼峰(onClick)，不是纯小写（onclick, onblur）；jsx 语法需要传入一个函数作为事件处理函数，而不是一个字符串；不能通过返回 false 来阻止默认行为，必须使用 preventDefault。
+- 优点：
+  - 不需要担心跨浏览器的兼容问题；
+  - 对事件的处理，通过事件委托机制冒泡到 root(react 17) 或者 document(react 16) 节点进行触发，减少内存消耗，避免频繁解绑，提高性能；
+  - 方便事件的同一管理（如事务机制）
+- 合成事件和原生事件的区别：
+  - 事件命名方式不同。react 事件采用小驼峰(onClick)，不是纯小写（onclick, onblur）；
+  - jsx 语法需要传入一个函数作为事件处理函数，而不是一个字符串；
+  - 不能通过返回 false 来阻止默认行为，必须使用 preventDefault。
 - 冒泡到 document 上的事件也不是原生的浏览器事件，而是由 react 自己实现的合成事件（SyntheticEvent）。因此如果不想要是事件冒泡的话应该调用 event.preventDefault()方法，而不是调用 event.stopProppagation()方法。
 - react 17 为什么将事件绑定到 root: 有利于多个 react 版本并存，例如微前端。同时绑定到 document 上，会导致 react 版本混乱。
 
