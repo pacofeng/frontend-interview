@@ -79,7 +79,7 @@ React 是一个简单的 javascript UI 库，用于构建高效、快速的用�
 
   - **更新生命周期**
     - `componentWillReceiveProps(nextProps)`: 仅当新的属性被传递给了组件后才会调用。这也是唯一可以调用 setState 方法的地方。
-    - `shouldComponentUpdate(nextProps, nextState)`:这个生命周期函数是用来提升速度的，它是在重新渲染组件开始前触发的，默认返回 true，可以比较 this.props 和 nextProps ，this.state 和 nextState 值是否变化，来确认返回 true 或者 false。当返回 false 时，组件的更新过程停止，后续的 render、componentDidUpdate 也不会被调用。在进行新旧对比的时候，是浅对比， 也就是说如果比较的数据时引用数据类型，只要数据的引用的地址没变，即使内容变了，也会被判定为 true。主要是针对一下两个场景的优化：setState 函数在任何情况下都会导致组件重新渲染吗（会）？如果没有调用 setState，props 值也没有变化，是不是组件就不会重新渲染（父组件重新渲染时，不管传入的 props 有没有变化，都会引起子组件的重新渲染）？
+    - `shouldComponentUpdate(nextProps, nextState)`:这个生命周期函数是用来提升速度的，它是在重新渲染组件开始前触发的，默认返回 true，可以比较 this.props 和 nextProps ，this.state 和 nextState 值是否变化，来确认返回 true 或者 false。当返回 false 时，组件的更新过程停止，后续的 render、componentDidUpdate 也不会被调用。在进行新旧对比的时候，是浅对比， 也就是说如果比较的数据时引用数据类型，只要数据的引用的地址没变，即使内容变了，也会被判定为 true。主要是针对以下两个场景的优化：setState 函数在任何情况下都会导致组件重新渲染吗（会）？如果没有调用 setState，props 值也没有变化，是不是组件就不会重新渲染（父组件重新渲染时，不管传入的 props 有没有变化，都会引起子组件的重新渲染）？
     - `componentWillUpdate(nextProps, nextState)`: 组件更新之前触发
     - `componentDidUpdate(prevProps, prevState)`: 更新操作发生后，调用 render 之后触发。
 
