@@ -577,11 +577,17 @@ React 需要利用调用顺序来正确更新相应的状态，以及调用相�
 - 总结：Hooks 组件（使用了 Hooks 的函数组件）有生命周期，而函数组件（未使用 Hooks 的函数组件）是没有生命周期的。
 
   具体的 class 组件与 hooks 组件生命周期的对应关系：
+
   (1): constructor -->> useState(0), useState 来初始化 state
+
   (2): shouldComponentUpdate -->> React.memo 包裹一个组件来对它的 props 进行浅比较，其中，React.memo 等效于 PureComponent，它只浅比较 props。这里也可以使用 useMemo 优化每一个节点。
+
   (3): componentDidMount, componentDidUpdate -->> useEffect
+
   (4): render：这是函数组件体本身
+
   (5): componentWillUnmount：相当于 useEffect 里面返回的 cleanup 函数
+
   (6): componentDidCatch and getDerivedStateFromError：目前还没有这些方法的 Hook 等价写法
 
   ```js
