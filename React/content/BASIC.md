@@ -774,40 +774,61 @@ State --> View --> New State --> New View
 - 一旦通过 setState 方法更新 state，就会触发视图的重新渲染，完成表单组件的更新
 
 ```jsx
-class NameFrom extends React.Component { constroctor(props){ super(props);
-this.state = { value: '' } this.handleChange = this.handleChange.bind(this);
-this.handleSubmit = this.handleSubmit.bind(this); handleChange(e) {
-this.setSate({ value: e.target.value }) } handleSubmit(event) {
-alert('提交的名字: ' + this.state.value); event.preventDefault(); } render(){
-return(){
-<form onSubmit="{this.handleSubmit}">
-  <label>
-    名字：
-    <input
-      type="text"
-      value="{this.state.value}"
-      onChange="{this.handleChange}"
-    />
-  </label>
-</form>
-} } } }
+class NameFrom extends React.Component {
+  constroctor(props) {
+    super(props);
+    this.state = { value: '' };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(e) {
+    this.setSate({ value: e.target.value });
+  }
+  handleSubmit(event) {
+    alert('提交的名字: ' + this.state.value);
+    event.preventDefault();
+  }
+  render() {
+    return(){
+      <form onSubmit="{this.handleSubmit}">
+        <label>
+          名字：
+          <input
+            type="text"
+            value="{this.state.value}"
+            onChange="{this.handleChange}"
+          />
+        </label>
+      </form>
+    }
+  }
+}
 ```
 
 - 非受控组件
   官方定义：表单数据的处理都由 DOM 节点处理，要编写一个非受控组件，而不是为每个状态更新都编写数据处理函数，你可以 使用 ref 来从 DOM 节点中获取表单数据。
 
 ```jsx
-class NameFrom extends React.Component { constroctor(props){ super(props);
-this.input = React.createRef(); this.handleSubmit =
-this.handleSubmit.bind(this); handleSubmit(event) { alert('A name was submitted:
-' + this.input.current.value); event.preventDefault(); } render(){ return(){
-<form onSubmit="{this.handleSubmit}">
-  <label>
-    名字：
-    <input type="text" ref="{this.input}" />
-  </label>
-</form>
-} } } }
+class NameFrom extends React.Component {
+  constroctor(props) {
+    super(props);
+    this.input = React.createRef();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleSubmit(event) {
+    alert('A name was submitted:' + this.input.current.value);
+    event.preventDefault();
+  }
+  render(){ return(){
+    <form onSubmit="{this.handleSubmit}">
+      <label>
+        名字：
+        <input type="text" ref="{this.input}" />
+      </label>
+    </form>
+    }
+  }
+}
 ```
 
 总结：当有多个输入框，或者多个这种组件时，如果使用受控组件，需要编写多个事件处理函数，使得代码非常臃肿。
