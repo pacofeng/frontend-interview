@@ -1226,9 +1226,9 @@ sett();
 
 - 纯的递归
 
-> 时间复杂度 O(2^N) for each level of recursion, go to n-1 and n-2
+  > 时间复杂度 O(2^N) for each level of recursion, go to n-1 and n-2
 
-> 空间复杂度 O(N) space N to account for the max size of the stack
+  > 空间复杂度 O(N) space N to account for the max size of the stack
 
 ```js
 function fiber(n) {
@@ -1273,7 +1273,9 @@ function fiber(n) {
 
 - 循环
 
-> 时间复杂夫 O(N) 空间复杂度 O(1)
+  > 时间复杂夫 O(N)
+
+  > 空间复杂度 O(1)
 
 ```js
 function fiber(n) {
