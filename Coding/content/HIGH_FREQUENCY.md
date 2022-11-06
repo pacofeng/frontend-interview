@@ -519,7 +519,7 @@ Function.prototype.myBind = function (context, ...arg1) {
   return innerFn;
 };
 
-//测试代码
+// 测试代码
 var foo = {
   value: 1,
 };
@@ -712,6 +712,7 @@ const myNew = function (fn, ...args) {
   return typeof res === 'object' ? res : obj;
 };
 
+// 测试代码
 function Otaku(name, age) {
   this.name = name;
   this.age = age;
@@ -844,6 +845,37 @@ MyPromise.prototype.then = function (onResolved, onRejected) {
     onRejected(this.value);
   }
 };
+
+// 测试代码
+const p1 = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('success');
+  }, 2000);
+});
+
+const p2 = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    reject('fail');
+  }, 1000);
+});
+
+p1.then(
+  (res) => {
+    console.log(res);
+  },
+  (error) => {
+    console.log(error);
+  }
+);
+
+p2.then(
+  (res) => {
+    console.log(res);
+  },
+  (error) => {
+    console.log(error);
+  }
+);
 ```
 
 ### 实现 Promise.resolve(), Promise.reject()
