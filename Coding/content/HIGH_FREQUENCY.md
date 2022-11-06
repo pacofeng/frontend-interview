@@ -1440,6 +1440,24 @@ let add = curry((a, b, c) => a + b + c);
 console.log(add(1)(2)(3));
 console.log(add(1, 2)(3));
 console.log(add(1)(2, 3));
+
+变形;
+// 不断的柯里化，累积传入的参数，最后执行。
+const curry = function (fn) {
+  var _args = [];
+  return function cb() {
+    if (arguments.length == 0) {
+      return fn.apply(this, _args);
+    }
+    _args.push(...arguments);
+    return cb;
+  };
+};
+// test
+let add = curry((a, b, c) => a + b + c);
+console.log(add(1)(2)(3)());
+console.log(add(1, 2)(3)());
+console.log(add(1)(2, 3)());
 ```
 
 ## 手写一个 flatten 函数（数组降维）
@@ -1646,33 +1664,57 @@ function deepClone(obj) {
 }
 
 // test
-let obj = {
-  age: 1,
-  jobs: {
-    first: 'FE',
-  },
-  schools: [
-    {
-      name: 'shenda',
-    },
-    {
-      name: 'shiyan',
-    },
-  ],
-  arr: [
-    [
-      {
-        value: '1',
-      },
-    ],
-    [
-      {
-        value: '2',
-      },
-    ],
-  ],
+var data = { b: [1, 2], c: 34, d: { e: 56, f: { g: 78 } } };
+var copyData = deepClone(data);
+data.d.e = 900;
+console.log(data.d.e);
+console.log(copyData.d.e);
+```
+
+函数 2:
+
+- 特殊 object：函数，正则表达式，日期
+- 同一指向不重复 clone
+- 循环
+
+```js
+const deepClone = (data, map = new WeakMap()) => {
+  const dataType = Object.prototype.toString.call(data).slice(8, -1);
+  switch (dataType) {
+    case 'Number':
+    case 'String':
+    case 'Boolean':
+    case 'undefined':
+    case 'Null':
+      return data;
+    case 'Function':
+      return eval(data.toString());
+    case 'RegExp':
+      return new RegExp(data);
+    case 'Date':
+      return new Date(data.getTime());
+    default:
+      if (map.has(data)) {
+        return data;
+      } else {
+        const cloneData = Array.isArray(data) ? [] : {};
+        map.set(data, cloneData);
+        for (let key in data) {
+          cloneData[key] = deepCopy(data[key], map);
+        }
+
+        return cloneData;
+      }
+  }
 };
-console.log(deepClone(obj));
+
+const h = { g: 90 };
+var data = { b: [1, 2], c: 34, d: { e: 56, f: { g: 78 } }, i: h, j: h };
+var copyData = deepClone(data);
+data.i.g = 900;
+copyData.i.g = 900;
+console.log(data);
+console.log(copyData);
 ```
 
 ## 手写一个单例模式
