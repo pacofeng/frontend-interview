@@ -1227,6 +1227,7 @@ sett();
 - 纯的递归
 
 > 时间复杂度 O(2^N) for each level of recursion, go to n-1 and n-2
+
 > 空间复杂度 O(N) space N to account for the max size of the stack
 
 ```js
@@ -1242,7 +1243,9 @@ console.log(fiber(5));
 ```
 
 - 记忆化递归 (DP 动态规划)
+
   > 时间复杂度 O(N)
+
   > 空间复杂度 O(N)
 
 ```js
@@ -1259,22 +1262,7 @@ var fib = function (n) {
 ```
 
 ```js
-var fib = function (n) {
-  if (n < 2) return n;
-
-  var cache = [0, 1];
-  for (var i = 2; i <= n; i++) {
-    cache[i] = cache[i - 1] + cache[i - 2];
-  }
-  return cache[n];
-};
-```
-
-> 时间复杂度 O(N) 空间复杂度 O(N)
-
-```js
 function fiber(n) {
-  if (n === 0 || n === 1) return n;
   var dp = [0, 1];
   for (let i = 2; i <= n; i++) {
     dp[i] = dp[i - 1] + dp[i - 2];
