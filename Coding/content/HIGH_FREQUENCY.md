@@ -1743,6 +1743,32 @@ var oB = SingleTon.getInstance('Fan');
 console.log(oA === oB); // true
 ```
 
+代理模式
+
+```js
+var ProxySingleton = (function () {
+  var instance = null;
+  var Singleton = function (name) {
+    this.name = name;
+  };
+
+  return function cb(name) {
+    if (!instance) {
+      instance = new Singleton(name);
+    }
+
+    return instance;
+  };
+})();
+
+// test
+var oA = new ProxySingleton('Lee');
+var oB = new ProxySingleton('Fan');
+console.log(oA === oB); // true
+console.log(oA.name);
+console.log(oB.name);
+```
+
 > static 关键字解释：类相当于实例的原型， 所有在类中定义的方法， 都会被实例继承。 如果在一个方法前， 加上 static 关键字， 就表示该方法不会被实例继承， 而是直接通过类来调用， 这就称为“ 静态方法”。
 
 ## 手写一个观察者模式
