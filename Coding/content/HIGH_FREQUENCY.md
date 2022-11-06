@@ -351,11 +351,10 @@ apply 和 call 实现类似，只是传入的参数形式是数组形式，而�
 因此，借助 es6 提供的...运算符，就可以很方便的实现数组和参数序列的转化。
 
 ```js
-Function.prototype.myApply = function (context) {
+Function.prototype.myApply = function (context, ...args) {
   const fn = Symbol('fn'); // 声明一个独有的Symbol属性, 防止fn覆盖已有属性
   context = context || window; // 若没有传入this, 默认绑定window对象
   context.fn = this; // 将函数挂载到对象的fn属性上
-  const args = [...arguments].slice(1); // 处理传入的参数
   const result = context.fn(args); // 通过对象的属性调用该方法
   delete context.fn; // 删除该属性
   return result;
