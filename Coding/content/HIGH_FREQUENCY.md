@@ -1680,6 +1680,7 @@ console.log(copyData.d.e);
 ```js
 const deepClone = (data, map = new WeakMap()) => {
   const dataType = Object.prototype.toString.call(data).slice(8, -1);
+  // '[object Number]' '[object String]' '[object undefined]'
   switch (dataType) {
     case 'Number':
     case 'String':
