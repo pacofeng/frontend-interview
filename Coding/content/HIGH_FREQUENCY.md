@@ -1674,7 +1674,7 @@ console.log(copyData.d.e);
 函数 2:
 
 - 特殊 object：函数，正则表达式，日期
-- 同一指向不重复 clone
+- 同一指向不重复 clone (使用 map)
 - 循环
 
 ```js
