@@ -669,10 +669,10 @@ parseInt('3', 2); // radix=2 表示是二进制数,只能有0和1,解析的字�
 
 ```js
 function instanceofFunc(obj, cons) {
-  // 错误判断 构造函数必须是一个function 其他的均报错
   if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) {
     return false;
   }
+  // 错误判断 构造函数必须是一个function 其他的均报错
   if (typeof cons !== 'function') throw new Error('instance error');
   // 获取到原型对象
   let proto = cons.prototype;
