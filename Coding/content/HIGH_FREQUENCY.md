@@ -1939,6 +1939,65 @@ let time = setInterval(() => {
 //  have a rest
 ```
 
+```js
+class Emitter {
+  constructor() {
+    this.listeners = new Map();
+  }
+
+  subscribe(eventName, callback) {
+    var cb = (...args) => {
+      callback(...args);
+    };
+
+    if (!this.listeners.has(eventName)) {
+      this.listeners.set(eventName, new Set([cb]));
+    } else {
+      this.listeners.get(eventName).add(cb);
+    }
+
+    return {
+      release: () => {
+        if (this.listeners.has(eventName)) {
+          var callbacks = this.listeners.get(eventName);
+          callbacks.delete(cb);
+          if (callbacks.size === 0) this.listeners.delete(eventName);
+        }
+      },
+    };
+  }
+
+  emit(eventName, ...args) {
+    if (this.listeners.has(eventName)) {
+      var callbacks = this.listeners.get(eventName);
+      callbacks.forEach((callback) => {
+        try {
+          callback.apply(this, args);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  }
+}
+
+// test
+var cbFn = (a, b) => {
+  console.log('cbFn: ' + a + b);
+};
+var cbFn2 = (a, b) => {
+  console.log('cbFn2: ' + a + b);
+};
+const emitter = new Emitter();
+const sub = emitter.subscribe('click', cbFn);
+const sub2 = emitter.subscribe('click', cbFn2);
+emitter.emit('click', 'foo', 'bar');
+// cbFn: foobar
+// cbFn2: foobar
+sub.release();
+emitter.emit('click', 'aaa', 'bbb'); // cbFn2: aaabbb
+```
+
 - 来看一个简单的用途:
 
 ```js
