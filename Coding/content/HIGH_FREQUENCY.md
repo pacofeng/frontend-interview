@@ -418,9 +418,10 @@ bar.bind(obj)(2, 2);
 为了兼容 bind 调用时满足参数传递的不同方式，代码修改如下：
 
 ```js
-Function.prototype.myBind = function (ctx, ...arg1) {
+Function.prototype.myBind = function (context, ...arg1) {
+  context = context || window;
   return (...arg2) => {
-    return this.call(ctx, ...arg1, ...arg2);
+    return this.call(context, ...arg1, ...arg2);
   };
 };
 //测试代码
@@ -430,6 +431,111 @@ function bar(b, c) {
 }
 bar.myBind(obj)(20, 30);
 bar.myBind(obj, 20, 30)();
+```
+
+为了兼容 new 调用，代码修改如下：
+
+```js
+Function.prototype.myBind = function (context, ...arg1) {
+  context = context || window;
+  const self = this;
+  const innerFn = function (...arg2) {
+    return self.call(
+      this instanceof innerFn ? this : context,
+      ...arg1,
+      ...arg2
+    );
+  };
+
+  return innerFn;
+};
+//测试代码
+var foo = {
+  value: 1,
+};
+
+function bar(name, age) {
+  this.test = 'test';
+  console.log(this.value);
+  console.log(name);
+  console.log(age);
+}
+
+const bindFoo = bar.myBind(foo, 'pacoo');
+new bindFoo(40); // undefined, pacoo, 40
+```
+
+为了兼容 prototype 调用，代码修改如下：
+
+```js
+Function.prototype.myBind = function (context, ...arg1) {
+  context = context || window;
+  const self = this;
+  const innerFn = function (...arg2) {
+    return self.call(
+      this instanceof innerFn ? this : context,
+      ...arg1,
+      ...arg2
+    );
+  };
+
+  innerFn.prototype = this.prototype;
+  return innerFn;
+};
+
+//测试代码
+var foo = {
+  value: 1,
+};
+
+function bar() {
+  console.log(this.value);
+  console.log(this.friend);
+}
+
+bar.prototype.friend = 'kevin';
+
+const bindFoo = bar.myBind(foo);
+new bindFoo(); // undefined kevin
+```
+
+直接修改 fBound.prototype 的时候，也会直接修改绑定函数的 prototype, 为了解决这个问题，代码修改如下：
+
+```js
+Function.prototype.myBind = function (context, ...arg1) {
+  context = context || window;
+  const self = this;
+  const innerFn = function (...arg2) {
+    return self.call(
+      this instanceof innerFn ? this : context,
+      ...arg1,
+      ...arg2
+    );
+  };
+
+  const tempFn = function () {};
+  tempFn.prototype = self.prototype;
+  innerFn.prototype = new tempFn();
+  return innerFn;
+};
+
+//测试代码
+var foo = {
+  value: 1,
+};
+
+function bar() {
+  console.log(this.value);
+  console.log(this.friend);
+}
+
+bar.prototype.friend = 'kevin';
+
+const bindFoo = bar.myBind(foo);
+
+bindFoo.prototype.ttt = '1111';
+console.log(bindFoo.prototype); // { ttt: '1111' }
+console.log(bar.prototype); // { friend: 'kevin' }
 ```
 
 ## 实现一个 forEach 方法
