@@ -163,33 +163,31 @@ Be aware that
 - function call B is swallowed because B, C is in the cooling time from A, and C is latter.
 
 ```js
-const throttle2 = function (func, wait) {
-  let lastArgs = null;
-  let waiting = false;
+function throttle(func, wait) {
+  let isBusy = false;
+  let lastArgs;
 
   const startCooling = function () {
     setTimeout(() => {
-      waiting = false;
+      isBusy = false;
       if (lastArgs) {
+        isBusy = true;
         func.apply(this, lastArgs);
-        waiting = true;
         lastArgs = null;
         startCooling();
       }
     }, wait);
   };
-
-  return function (...args) {
-    const context = this;
-    if (waiting) {
-      lastArgs = args;
+  return function () {
+    if (!isBusy) {
+      isBusy = true;
+      func.apply(this, arguments);
+      startCooling.apply(this);
     } else {
-      func.apply(context, args);
-      waiting = true;
-      startCooling.call(context);
+      lastArgs = arguments;
     }
   };
-};
+}
 ```
 
 ## 手写一个 count 函数
