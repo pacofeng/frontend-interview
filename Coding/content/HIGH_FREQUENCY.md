@@ -699,31 +699,38 @@ new 的作用:
 实现:
 
 ```js
-function myNew() {
+const myNew = function (fn, ...args) {
   // 1.创建空对象
-  let obj = {};
-  let constructor = [...arguments][0];
-  let params = [...arguments].slice(1);
-
+  const obj = {};
   // 2.空对象的原型指向构造函数的原型
-  obj.__proto__ = constructor.prototype;
-
+  obj.__proto__ = fn.prototype;
   // 3.执行构造函数的代码
-  var ret = constructor.apply(obj, params);
-
+  const res = fn.apply(obj, args);
   // 4.判断返回值类型：
   // 如果是基本值类型，则返回的创建的'空对象'
   // 如果是引用类型，则返回这个引用类型的对象
-  var flag = ret && ret instanceof Object;
-  return flag ? ret : obj;
-}
-// test
-function A(name) {
+  return typeof res === 'object' ? res : obj;
+};
+
+function Otaku(name, age) {
   this.name = name;
+  this.age = age;
+
+  this.habit = 'Games';
 }
-var a1 = myNew(A, 'Lee');
-var a2 = new A('Lee');
-console.log(a1, a2);
+
+Otaku.prototype.strength = 60;
+
+Otaku.prototype.sayYourName = function () {
+  console.log('I am ' + this.name);
+};
+
+const person = myNew(Otaku, 'Kevin', 18);
+console.log(person.name); // Kevin
+console.log(person.age); // 18
+console.log(person.habit); // Games
+console.log(person.strength); // 60
+person.sayYourName(); // I am Kevin
 ```
 
 ## Promise 系列
