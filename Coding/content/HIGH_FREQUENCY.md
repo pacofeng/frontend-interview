@@ -308,11 +308,10 @@ foo.bar(); //1
 代码如下：
 
 ```js
-Function.prototype.myCall = function (context) {
+Function.prototype.myCall = function (context, ...args) {
   const fn = Symbol('fn'); // 声明一个独有的Symbol属性, 防止fn覆盖已有属性
   context = context || window; // 若没有传入this, 默认绑定window对象
   context.fn = this; // 将函数挂载到对象的fn属性上
-  const args = [...arguments].slice(1); // 处理传入的参数
   const result = context.fn(...args); // 通过对象的属性调用该方法
   delete context.fn; // 删除该属性
   return result;
