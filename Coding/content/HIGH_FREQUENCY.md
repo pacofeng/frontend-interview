@@ -896,25 +896,22 @@ const reject = (err) => {
 ### 实现 Promise.all()
 
 ```js
-Promise.all = function (iterator) {
-  if (!Array.isArray(iterator)) return;
-  let count = 0;
-  let res = [];
-  return new Promise((resolve, reject) => {
-    for (let item of iterator) {
-      Promise.resolve(item)
-        .then((data) => {
-          res[count++] = data;
-          if (count === iterator.length) {
-            resolve(res);
-          }
-        })
-        .catch((e) => {
-          reject(e);
-        });
-    }
+Promise.all = function (promises) => {
+	return new Promise((resolve, reject) => {
+  	if (!Array.isArray(promises) || promises.length === 0) resolve([]);
+  	var count = promises.length;
+    var res = new Array(count);
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise).then((data) => {
+        res[index] = data;
+        count -= 1;
+        if (count === 0) resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
   });
-};
+}
 
 // test
 const p1 = Promise.resolve(3);
