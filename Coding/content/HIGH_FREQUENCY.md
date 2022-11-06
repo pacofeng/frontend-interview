@@ -159,10 +159,11 @@ After throttling at wait time of 3 dashes
 Be aware that
 
 call A is triggered right way because not in waiting time
+
 function call B is swallowed because B, C is in the cooling time from A, and C is latter.
 
 ```js
-const throttle = function (func, wait) {
+const throttle2 = function (func, wait) {
   let lastArgs = null;
   let waiting = false;
 
