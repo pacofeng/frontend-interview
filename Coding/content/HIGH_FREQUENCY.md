@@ -1408,24 +1408,17 @@ alert(add(1)(2)(3));
 ES5 实现
 
 ```js
-function curry(fn, args = []) {
-  // 获取函数需要的参数长度
-  var length = fn.length;
-  return function () {
-    // 拼接得到现有的所有参数
-    for (let i = 0; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
-    // 判断参数的长度是否已经满足函数所需参数的长度
-    if (args.length >= length) {
-      // 如果满足，执行函数
+var curry = function (fn) {
+  return function innerFn(...args) {
+    if (args.length >= fn.length) {
       return fn.apply(this, args);
     } else {
-      // 如果不满足，递归返回科里化的函数，等待参数的传入
-      return curry.call(this, fn, args);
+      return (...innerArgs) => {
+        return innerFn.call(this, ...args, ...innerArgs);
+      };
     }
   };
-}
+};
 
 // test
 let add = curry((a, b, c) => a + b + c);
