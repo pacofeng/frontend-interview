@@ -148,6 +148,49 @@ var throttleRun = throttle(() => {
 window.addEventListener('mousemove', throttleRun);
 ```
 
+函数节流 2：Before throttling we have a series of calling like
+
+─A─B─C─ ─D─ ─ ─ ─ ─ ─ E─ ─F─G
+
+After throttling at wait time of 3 dashes
+
+─A─ ─ ─C─ ─ ─D ─ ─ ─ ─ E─ ─ ─G
+
+Be aware that
+
+call A is triggered right way because not in waiting time
+function call B is swallowed because B, C is in the cooling time from A, and C is latter.
+
+```js
+const throttle = function (func, wait) {
+  let lastArgs = null;
+  let waiting = false;
+
+  const startCooling = function () {
+    setTimeout(() => {
+      waiting = false;
+      if (lastArgs) {
+        func.apply(this, lastArgs);
+        waiting = true;
+        lastArgs = null;
+        startCooling();
+      }
+    }, wait);
+  };
+
+  return function (...args) {
+    const context = this;
+    if (waiting) {
+      lastArgs = args;
+    } else {
+      func.apply(context, args);
+      waiting = true;
+      startCooling.call(context);
+    }
+  };
+};
+```
+
 ## 手写一个 count 函数
 
 每次调用一个函数自动加 1
