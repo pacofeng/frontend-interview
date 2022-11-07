@@ -2359,3 +2359,63 @@ function format(number) {
   );
 }
 ```
+
+JSONP
+
+```js
+const JsonP = ({ url, cbKey, params }) => {
+  const scriptEl = document.createElement('script');
+  const cbFn = 'cbFn' + Date.now();
+  scriptEl.src = `${url}?${cbKey}=${cbFn}`;
+
+  const paramKeys = Object.keys(params);
+  if (paramKeys.length > 0) {
+    const paramsStr = paramKeys
+      .map((key) => {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+      })
+      .join('&');
+    scriptEl.src += '&' + paramsStr;
+  }
+
+  return new Promise((resolve, reject) => {
+    window[cbFn] = function (data) {
+      document.body.removeChild(scriptEl);
+      delete window[cbFn];
+      resolve(data);
+    };
+
+    scriptEl.onerror = function (error) {
+      document.body.removeChild(scriptEl);
+      delete window[cbFn];
+      reject('something went wrong!', error);
+    };
+
+    document.body.appendChild(scriptEl);
+  });
+};
+
+const options = {
+  url: 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg',
+  cbKey: 'jsonpCallback',
+  params: {
+    g_tk: 1928093487,
+    inCharset: 'utf-8',
+    outCharset: 'utf-8',
+    notice: 0,
+    format: 'jsonp',
+    platform: 'h5',
+    uin: 0,
+    needNewCode: 1,
+  },
+};
+
+JsonP(options).then(
+  (res) => {
+    console.log(res);
+  },
+  (err) => {
+    console.log(err);
+  }
+);
+```
