@@ -126,6 +126,26 @@ var debounceRun = debounce(function () {
 window.addEventListener('mousemove', debounceRun);
 ```
 
+函数防抖 hood
+
+```js
+function useDebounce(fn, delay, dep = []) {
+  const { current } = useRef({ fn, timer: null });
+
+  return useCallback(
+    function (...args) {
+      if (current.timer) {
+        clearTimeout(current.timer);
+      }
+      current.timer = setTimeout(() => {
+        current.fn.call(this, ...args);
+      }, delay);
+    },
+    [dep]
+  );
+}
+```
+
 函数节流：规定一个单位时间，在这个单位时间内，只能有一次触发事件的回调函数执行,如果在同一个单位时间内某事件被触发多次，只有一次能生效。
 
 ```js
@@ -146,6 +166,23 @@ var throttleRun = throttle(() => {
 }, 2000);
 // 不停的移动鼠标，控制台每隔2s就会打印123
 window.addEventListener('mousemove', throttleRun);
+```
+
+函数节流 hood
+
+```js
+function useThrottle(fn, delay, dep = []) {
+  const { current } = useRef({ fn, timer: null });
+
+  return useCallback(function f(...args) {
+    if (!current.timer) {
+      current.timer = setTimeout(() => {
+        delete current.timer;
+      }, delay);
+      current.fn.call(this, ...args);
+    }
+  }, dep);
+}
 ```
 
 函数节流 2：Before throttling we have a series of calling like
